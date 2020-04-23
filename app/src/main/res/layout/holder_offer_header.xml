@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    android:clickable="false"
+    android:id="@+id/offerHeader"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackgroundDark"
+    android:paddingStart="16dp"
+    tools:text="Акции"
+    android:textAllCaps="true"
+    android:textSize="@dimen/textSizeNormal" />
