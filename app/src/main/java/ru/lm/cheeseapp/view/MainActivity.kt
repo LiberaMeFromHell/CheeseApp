@@ -44,13 +44,13 @@ class MainActivity : AppCompatActivity() {
         bind()
 
         val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        viewModel.getBannerList().observe(this, Observer<List<Banner>> {
+        viewModel.bannerLiveData.observe(this, Observer<List<Banner>> {
             bannerList.clear()
             bannerList.addAll(it)
             bannerListAdapter.submitList(bannerList)
         })
 
-        viewModel.getOfferList().observe(this, Observer<List<OfferRecyclerItem>> {
+        viewModel.offerLiveData.observe(this, Observer<List<OfferRecyclerItem>> {
             offerList.clear()
             offerList.addAll(it)
             offerListAdapter.submitList(offerList)
@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView = findViewById<SearchView>(R.id.searchView)
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
         initRecyclerViews()
 
         buttonW.setOnClickListener {
@@ -74,8 +75,11 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-        viewModel.onObserveBannerList()
-        viewModel.onObserveOfferList()
+
+        if (savedInstanceState == null) {
+            viewModel.onObserveBannerList()
+            viewModel.onObserveOfferList()
+        }
     }
 
     override fun onNewIntent(intent: Intent) {

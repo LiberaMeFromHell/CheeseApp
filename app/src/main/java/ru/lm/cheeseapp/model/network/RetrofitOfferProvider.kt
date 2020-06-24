@@ -2,6 +2,7 @@ package ru.lm.cheeseapp.model.network
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -16,10 +17,7 @@ import javax.inject.Inject
 
 class RetrofitOfferProvider : OfferProvider {
 
-    private val disposable = CompositeDisposable()
-
-    private val liveData: MutableLiveData<List<OfferRecyclerItem>> =
-        MutableLiveData()
+    val liveData: List<OfferRecyclerItem> = emptyList()
 
     @Inject
     lateinit var cheeseAPI: CheeseAPI
@@ -28,15 +26,15 @@ class RetrofitOfferProvider : OfferProvider {
         cheeseAPI = InjectionApplication.appComponent.injectNetworkAdapter()
     }
 
-    override fun onObserveOfferLiveData() {
-        disposable.add(
+    override fun onObserveOfferRecyclerList(): Observable<List<OfferRecyclerItem>> =
+
         cheeseAPI.getOfferResponse()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            //.subscribeOn(Schedulers.io())
+            //.observeOn(AndroidSchedulers.mainThread())
             .map {
                 createRecyclerOfferList(it)
             }
-            .subscribeWith(object: DisposableObserver<List<OfferRecyclerItem>>() {
+/*            .subscribeWith(object: DisposableObserver<List<OfferRecyclerItem>>() {
                 override fun onNext(t: List<OfferRecyclerItem>) {
                     liveData.postValue(t)
                 }
@@ -45,12 +43,11 @@ class RetrofitOfferProvider : OfferProvider {
                     Log.d("RetrofitOfferProvider", "onObserveOfferLiveData $e")
                 }
 
-            }))
-    }
+            })*/
 
-    override fun getOfferLiveData(): MutableLiveData<List<OfferRecyclerItem>> = liveData
+    //override fun getOfferLiveData(): List<OfferRecyclerItem> = liveData
 
-    override fun dispose() {
+/*    override fun dispose() {
         disposable.dispose()
-    }
+    }*/
 }

@@ -25,10 +25,9 @@ class RetrofitBannerProvider : BannerProvider {
         cheeseAPI = InjectionApplication.appComponent.injectNetworkAdapter()
     }
 
-    override fun onObserveBannerLiveData() {
-        disposable.add(
+    override fun onObserveBannerLiveData() =
             cheeseAPI.getBannerResponse()
-                .subscribeOn(Schedulers.io())
+/*                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<List<Banner>>() {
                     override fun onNext(t: List<Banner>) {
@@ -38,13 +37,11 @@ class RetrofitBannerProvider : BannerProvider {
                     override fun onError(e: Throwable) {
                         Log.d("RetrofitBannerProvider", "onObserveBannerLiveData $e")
                     }
-                })
-        )
-    }
+                })*/
 
-    override fun getBannerLiveData(): MutableLiveData<List<Banner>> = liveData
+    //override fun getBannerLiveData(): MutableLiveData<List<Banner>> = liveData
 
-    override fun dispose() {
+/*    override fun dispose() {
         disposable.dispose()
-    }
+    }*/
 }
