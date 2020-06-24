@@ -6,16 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import ru.lm.cheeseapp.R
+import ru.lm.cheeseapp.databinding.HolderOfferHeaderBinding
+import ru.lm.cheeseapp.databinding.HolderOfferItemBinding
 import ru.lm.cheeseapp.model.pojo.OfferRecyclerItem
 import kotlin.math.roundToInt
 
-class OfferRecyclerAdapter(val offerList: List<OfferRecyclerItem>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class OfferRecyclerAdapter(private val offerList: List<OfferRecyclerItem>) :
+    ListAdapter<OfferRecyclerItem, RecyclerView.ViewHolder>(OfferDiffUtil()) {
 
     override fun getItemViewType(position: Int) =
         if (offerList[position].isHeader) 1 else 0
@@ -25,72 +27,88 @@ class OfferRecyclerAdapter(val offerList: List<OfferRecyclerItem>) :
         val view: View
         return if (viewType == 0) {
             view = layoutInflater.inflate(R.layout.holder_offer_item, parent, false)
-            OfferViewHolder(view)
+
+            OfferViewHolder(HolderOfferItemBinding.bind(view))
         } else {
             view = layoutInflater.inflate(R.layout.holder_offer_header, parent, false)
-            OfferViewHolder.HeaderViewHolder(view)
+            HeaderViewHolder(HolderOfferHeaderBinding.bind(view))
         }
     }
-
-    override fun getItemCount() = offerList.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         if (offerList[position].isHeader) {
-            holder as OfferViewHolder.HeaderViewHolder
+            holder as HeaderViewHolder
             holder.offerHeader.text = offerList[position].headerText
         } else {
             holder as OfferViewHolder
-            Glide.with(holder.offerImageView).load(offerList[position].offer?.image)
-                .into(holder.offerImageView)
-            holder.titleOffer.text = offerList[position].offer?.name
+            Glide.with(holder.image).load(offerList[position].offer?.image)
+                .into(holder.image)
+            holder.title.text = offerList[position].offer?.name
 
             if (!offerList[position].offer?.desc.isNullOrEmpty())
-                holder.descOffer.text = offerList[position].offer?.desc
+                holder.desc.text = offerList[position].offer?.desc
             else
-                holder.descOffer.visibility = View.INVISIBLE
+                holder.desc.visibility = View.INVISIBLE
 
             offerList[position].offer?.discount?.let {
-                holder.discountOffer.text = "${it.roundToInt() * 100}%"
-                holder.priceOffer.text = "${offerList[position].offer?.price?.roundToInt()}₽"
-                holder.priceOffer.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                holder.finalPriceOffer.text =
+                holder.discount.text = "${it.roundToInt() * 100}%"
+                holder.price.text = "${offerList[position].offer?.price?.roundToInt()}₽"
+                holder.price.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                holder.finalPrice.text =
                     "${((offerList[position].offer?.price ?: 0f) * it).roundToInt()}₽"
             } ?: run {
-                holder.discountOffer.visibility = View.INVISIBLE
-                holder.priceOffer.visibility = View.INVISIBLE
-                holder.finalPriceOffer.visibility = View.INVISIBLE
+                holder.discount.visibility = View.INVISIBLE
+                holder.price.visibility = View.INVISIBLE
+                holder.finalPrice.visibility = View.INVISIBLE
             }
         }
     }
 
-    class OfferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class OfferViewHolder(binding: HolderOfferItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        @BindView(R.id.descOffer)
-        lateinit var descOffer: TextView
-        @BindView(R.id.titleOffer)
-        lateinit var titleOffer: TextView
-        @BindView(R.id.discountOffer)
-        lateinit var discountOffer: TextView
-        @BindView(R.id.finalPriceOffer)
-        lateinit var finalPriceOffer: TextView
-        @BindView(R.id.priceOffer)
-        lateinit var priceOffer: TextView
-        @BindView(R.id.offerImageView)
-        lateinit var offerImageView: ImageView
+        var desc: TextView
+        var title: TextView
+        var discount: TextView
+        var finalPrice: TextView
+        var price: TextView
+        var image: ImageView
 
         init {
-            ButterKnife.bind(this, itemView)
+            binding.apply {
+                desc = offerDesc
+                title = offerTitle
+                discount = offerDiscount
+                finalPrice = offerFinalPrice
+                price = offerPrice
+                image = offerImageView
+            }
+        }
+    }
+
+    class HeaderViewHolder(binding: HolderOfferHeaderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        var offerHeader: TextView = binding.offerHeader
+    }
+
+    class OfferDiffUtil : DiffUtil.ItemCallback<OfferRecyclerItem>() {
+
+        override fun areItemsTheSame(
+            oldItem: OfferRecyclerItem,
+            newItem: OfferRecyclerItem
+        ): Boolean {
+            if (oldItem.isHeader == newItem.isHeader)
+                return true
+            return (oldItem.offer?.id == newItem.offer?.id)
         }
 
-        class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-            @BindView(R.id.offerHeader)
-            lateinit var offerHeader: TextView
-
-            init {
-                ButterKnife.bind(this, itemView)
-            }
+        override fun areContentsTheSame(
+            oldItem: OfferRecyclerItem,
+            newItem: OfferRecyclerItem
+        ): Boolean {
+            if (oldItem.isHeader)
+                return oldItem.headerText == newItem.headerText
+            return (oldItem.offer == newItem.offer)
         }
     }
 }

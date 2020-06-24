@@ -4,7 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.RadioButton
@@ -13,9 +13,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.*
-import butterknife.BindView
-import butterknife.ButterKnife
 import ru.lm.cheeseapp.R
+import ru.lm.cheeseapp.databinding.ActivityMainBinding
 import ru.lm.cheeseapp.model.pojo.Banner
 import ru.lm.cheeseapp.model.pojo.OfferRecyclerItem
 import ru.lm.cheeseapp.viewmodel.MainViewModel
@@ -23,48 +22,38 @@ import ru.lm.cheeseapp.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var searchView: SearchView
+    private lateinit var searchView: SearchView
 
-    @BindView(R.id.recyclerListInfo)
-    lateinit var recyclerListBanner: RecyclerView
+    private lateinit var recyclerListBanner: RecyclerView
+    private lateinit var recyclerListOffer: RecyclerView
 
-    @BindView(R.id.recyclerListOffers)
-    lateinit var recyclerListOffer: RecyclerView
+    private lateinit var buttonFilterTop: RadioButton
+    private lateinit var buttonFilterShops: RadioButton
+    private lateinit var buttonFilterGoods: RadioButton
 
-    @BindView(R.id.buttonFilterTop)
-    lateinit var buttonFilterTop: RadioButton
-
-    @BindView(R.id.buttonFilterShops)
-    lateinit var buttonFilterShops: RadioButton
-
-    @BindView(R.id.buttonFilterGoods)
-    lateinit var buttonFilterGoods: RadioButton
+    private lateinit var buttonW: ImageView
 
     private val bannerList = ArrayList<Banner>()
     private val offerList = ArrayList<OfferRecyclerItem>()
     private val bannerListAdapter = BannerRecyclerAdapter(bannerList)
     private val offerListAdapter = OfferRecyclerAdapter(offerList)
 
-    @BindView(R.id.buttonW)
-    lateinit var button: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        ButterKnife.bind(this)
+        bind()
 
         val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         viewModel.getBannerList().observe(this, Observer<List<Banner>> {
             bannerList.clear()
             bannerList.addAll(it)
-            bannerListAdapter.notifyDataSetChanged()
+            bannerListAdapter.submitList(bannerList)
         })
 
         viewModel.getOfferList().observe(this, Observer<List<OfferRecyclerItem>> {
             offerList.clear()
             offerList.addAll(it)
-            offerListAdapter.notifyDataSetChanged()
+            offerListAdapter.submitList(offerList)
         })
 
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
@@ -72,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         initRecyclerViews()
 
-        button.setOnClickListener {
+        buttonW.setOnClickListener {
             EmptyDialog().show(supportFragmentManager, "EmptyDialog")
         }
 
@@ -94,6 +83,23 @@ class MainActivity : AppCompatActivity() {
         if (Intent.ACTION_SEARCH == intent.action) {
             val query = intent.getStringExtra(SearchManager.QUERY)
             searchView.setQuery(query, false)
+        }
+    }
+
+    private fun bind() {
+        val binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
+        val rootView = binding.root
+        setContentView(rootView)
+        binding.apply {
+
+            this@MainActivity.searchView = searchView
+            this@MainActivity.buttonW = buttonW
+            this@MainActivity.recyclerListBanner = recyclerListBanner
+            this@MainActivity.recyclerListOffer = recyclerListOffer
+
+            this@MainActivity.buttonFilterTop = buttonFilterTop
+            this@MainActivity.buttonFilterShops = buttonFilterShops
+            this@MainActivity.buttonFilterGoods = buttonFilterGoods
         }
     }
 

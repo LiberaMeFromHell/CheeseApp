@@ -1,13 +1,11 @@
 package ru.lm.cheeseapp.module
 
 import dagger.Component
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
-import dagger.android.support.AndroidSupportInjectionModule
-import ru.lm.cheeseapp.model.network.*
+import ru.lm.cheeseapp.model.network.NetworkModuleProvider
+import ru.lm.cheeseapp.model.network.RetrofitBannerProvider
+import ru.lm.cheeseapp.model.network.RetrofitOfferProvider
 import ru.lm.cheeseapp.model.network.api.CheeseAPI
 import ru.lm.cheeseapp.model.network.api.CheeseNetworkAdapter
-import ru.lm.cheeseapp.model.pojo.Banner
 import javax.inject.Singleton
 
 @Singleton

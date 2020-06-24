@@ -112,14 +112,14 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerListInfo"
+                android:id="@+id/recyclerListBanner"
                 android:layout_width="match_parent"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_height="176dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerListOffers"
+                android:id="@+id/recyclerListOffer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

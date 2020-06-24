@@ -6,15 +6,17 @@
     android:layout_height="92dp">
 
     <TextView
-        android:id="@+id/descOffer"
-        android:layout_width="wrap_content"
+        android:id="@+id/offerDesc"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
         android:textColor="@color/colorTextPrimaryLight"
         android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/offerImageView"
-        app:layout_constraintTop_toBottomOf="@+id/titleOffer"
+        app:layout_constraintTop_toBottomOf="@+id/offerTitle"
         tools:text="Множество рецептов" />
 
     <ImageView
@@ -27,14 +29,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/titleOffer"
-        android:layout_width="wrap_content"
+        android:id="@+id/offerTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:textColor="@color/colorTextPrimaryDark"
         android:textSize="@dimen/textSizeNormal"
         android:textStyle="bold"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/offerImageView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Пармезан -50%" />
@@ -49,7 +54,7 @@
         app:srcCompat="@drawable/ic_basket" />
 
     <TextView
-        android:id="@+id/discountOffer"
+        android:id="@+id/offerDiscount"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_marginStart="24dp"
@@ -64,34 +69,34 @@
         tools:text="-50%" />
 
     <TextView
-        android:id="@+id/finalPriceOffer"
+        android:id="@+id/offerFinalPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="240dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="10dp"
         android:textColor="@color/colorAccentLight"
         android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/offerImageView"
         tools:text="99" />
 
     <TextView
-        android:id="@+id/priceOffer"
+        android:id="@+id/offerPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorTextPrimaryLight"
         android:textSize="@dimen/textSizeNormal"
-        app:layout_constraintBottom_toTopOf="@+id/finalPriceOffer"
-        app:layout_constraintEnd_toEndOf="@+id/finalPriceOffer"
-        app:layout_constraintStart_toStartOf="@+id/finalPriceOffer"
+        app:layout_constraintBottom_toTopOf="@+id/offerFinalPrice"
+        app:layout_constraintEnd_toEndOf="@+id/offerFinalPrice"
+        app:layout_constraintStart_toStartOf="@+id/offerFinalPrice"
         tools:text="198" />
 
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:background="@color/colorBackgroundDark"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
